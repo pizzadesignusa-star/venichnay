@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Веничная</title>
+<meta name="description" content="Демо интернет-магазина банных веников: берёзовые, дубовые, эвкалиптовые, можжевеловые и липовые веники, травы, чай, запарки, подушки и аксессуары. Опт от 10 штук.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root{
+  --bg:#efefeb; --surface:#e6e2d8; --ink:#1e231c; --muted:#565b50;
+  --accent:#4f7a2a; --accent-d:#3e6220; --accent-ink:#fff;
+  --field:#2b3a2c; --field-ink:#f4f4f1;
+  --step-small:clamp(.8125rem,.79rem + .1vw,.875rem);
+  --step-body:clamp(1.0625rem,1rem + .25vw,1.1875rem);
+  --step-lead:clamp(1.25rem,1.1rem + .7vw,1.625rem);
+  --step-head:clamp(2rem,1.3rem + 3.2vw,4rem);
+  --step-display:clamp(5.5rem,13vw,13rem);
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --font:"Commissioner",system-ui,sans-serif;
+  --r:0px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 var(--step-body)/1.55 var(--font);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+h1,h2,h3,p,ul{margin:0}
+ul{padding:0;list-style:none}
+h2{font:300 var(--step-head)/1 var(--font);letter-spacing:-.035em}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+button{font:inherit;color:inherit}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;background:var(--accent);color:var(--accent-ink);border:0;font-weight:500;text-decoration:none;cursor:pointer;transition:background-color .18s ease,transform .12s var(--ease-out)}
+.btn:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.btn:hover{background:var(--accent-d)}}
+
+/* ---------- split: sticky stage + reading column ---------- */
+.split{display:grid;grid-template-columns:47% 53%;position:relative}
+.stage{position:sticky;top:0;height:100svh;padding:20px 0 20px 20px}
+.stage-in{position:relative;height:100%;overflow:hidden;background:var(--field)}
+.scn{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .7s ease,visibility 0s .7s}
+.scn.on{opacity:1;visibility:visible;transition:opacity .7s ease}
+.scn img{width:100%;height:100%;object-fit:cover;animation:drift 24s ease-in-out infinite alternate}
+@keyframes drift{from{transform:scale(1)}to{transform:scale(1.07)}}
+.scn .cap{position:absolute;left:0;bottom:0;background:var(--field);color:var(--field-ink);font-size:var(--step-small);padding:6px 12px}
+.scene{width:100%;height:100%;display:block}
+.stepname{position:absolute;z-index:5;left:24px;top:24px;right:24px;color:var(--field-ink);font:300 var(--step-lead)/1.2 var(--font);letter-spacing:-.01em}
+.stepname b{font-weight:500;display:block}
+
+.read{padding:0 64px 0 64px;min-width:0}
+.nav{display:flex;gap:26px;justify-content:flex-end;align-items:center;padding:32px 0 0;font-size:var(--step-body);position:relative;z-index:3}
+.nav a{text-decoration:none}
+.nav a:hover{color:var(--accent)}
+.cartbtn{background:var(--ink);color:var(--bg);border:0;min-height:44px;padding:0 16px;cursor:pointer;font-weight:500;transition:transform .12s var(--ease-out)}
+.cartbtn:active{transform:scale(.96)}
+.cartbtn b{display:inline-block;min-width:1.4em;transition:transform .3s var(--ease-out)}
+.cartbtn.bump b{transform:scale(1.5)}
+
+.hero{height:calc(100svh - 76px);position:relative}
+.hero .say{position:absolute;top:38%;left:0;max-width:26ch;font:300 var(--step-lead)/1.3 var(--font)}
+.hero .say a{display:inline-flex;margin-top:22px}
+.wm{position:absolute;right:0;bottom:40px;margin:0;font:300 var(--step-display)/.8 var(--font);letter-spacing:-.05em;white-space:nowrap;color:var(--ink);transform-origin:right bottom;z-index:2;pointer-events:none}
+.wm span{display:block}
+.demo-note{position:absolute;right:0;bottom:8px;font-size:var(--step-small);color:var(--muted)}
+
+/* story slip */
+.story{padding:180px 0 140px}
+.story h2{max-width:10em}
+.story>p{margin-top:20px;max-width:30ch}
+.slip{margin-top:48px;background:#f6f6f4;max-width:460px;padding:26px 26px 54px;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),95% 100%,90% calc(100% - 14px),85% 100%,80% calc(100% - 14px),75% 100%,70% calc(100% - 14px),65% 100%,60% calc(100% - 14px),55% 100%,50% calc(100% - 14px),45% 100%,40% calc(100% - 14px),35% 100%,30% calc(100% - 14px),25% 100%,20% calc(100% - 14px),15% 100%,10% calc(100% - 14px),5% 100%,0 calc(100% - 14px));font-variant-numeric:tabular-nums}
+.slip h3{font:600 var(--step-body)/1.3 var(--font);margin-top:28px}
+.slip h3:first-child{margin-top:0}
+.slip .r{display:flex;gap:10px;align-items:baseline;margin-top:10px}
+.slip .r span:first-child{flex:0 1 auto}
+.slip .r i{flex:1;height:4px;align-self:center;background:radial-gradient(circle,var(--muted) 1.3px,transparent 1.6px) 0 0/8px 4px repeat-x;min-width:20px}
+.slip .r span:last-child{white-space:nowrap}
+.slip .fin{margin:26px -26px 0;background:var(--ink);color:#f6f6f4;min-height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-weight:500}
+.story .phase{min-height:46svh}
+.story .phase p{max-width:34ch}
+.story .phase h3{font:500 var(--step-lead)/1.2 var(--font);margin-bottom:10px}
+
+/* catalog */
+.cat{padding:120px 0 140px;container-type:inline-size}
+.cat .giant{font:300 min(var(--step-display),24cqw)/.8 var(--font);letter-spacing:-.06em;margin:0 0 28px;white-space:nowrap}
+.search{display:flex;gap:6px;margin-bottom:12px}
+.search input{flex:1;min-height:52px;border:0;background:var(--surface);padding:0 18px;font:inherit;color:var(--ink)}
+.search input:focus{outline:3px solid var(--accent);outline-offset:-3px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.filters button{min-height:44px;padding:0 14px;border:0;background:var(--surface);cursor:pointer;font-size:var(--step-small);transition:background-color .15s ease}
+.filters button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.bar{background:var(--surface);margin-bottom:6px}
+.bar summary{list-style:none;min-height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:500;cursor:pointer}
+.bar summary::-webkit-details-marker{display:none}
+.bar summary i{position:relative;width:14px;height:14px}
+.bar summary i::before,.bar summary i::after{content:"";position:absolute;left:0;top:6px;width:14px;height:2px;background:var(--ink);transition:transform .2s var(--ease-out)}
+.bar summary i::after{transform:rotate(90deg)}
+.bar[open] summary i::after{transform:rotate(0)}
+.bar ul{padding:4px 18px 20px}
+.it{display:flex;justify-content:space-between;gap:16px;padding:12px 0}
+.it .nm{min-width:0}
+.it .nm b{display:block;font-weight:500}
+.it .nm span{display:block}
+.st{font-style:normal;font-size:var(--step-small);display:inline-block;margin-top:4px;padding:2px 8px}
+.st-in{background:#d6e3c5;color:#2c4417}.st-order{background:#eadfc3;color:#5a4410}.st-out{background:#e3ddd6;color:#5b524a}
+.it .pr{text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
+.it .pr b{font-weight:500}
+.it .pr s{color:var(--muted);font-size:var(--step-small)}
+.add{display:block;margin-top:8px;margin-left:auto;min-height:40px;padding:0 14px;border:0;background:var(--ink);color:var(--bg);cursor:pointer;font-size:var(--step-small);transition:transform .12s var(--ease-out),background-color .15s ease}
+.add:active{transform:scale(.95)}
+.add.ok{background:var(--accent)}
+.add.off{background:transparent;color:var(--muted);padding:0;font-size:var(--step-body);cursor:default;min-height:0;margin-top:10px}
+.it[hidden]{display:none}
+.nores{display:none;padding:14px 18px;background:var(--surface)}
+.cat .note{margin-top:16px;font-size:var(--step-small);color:var(--muted)}
+
+/* showcase: product page */
+.show{display:grid;grid-template-columns:1fr 1fr;min-height:88svh;background:var(--surface)}
+.show .ph{padding:40px;display:flex;align-items:center}
+.show .ph img{width:100%;aspect-ratio:1;object-fit:cover}
+.show .tx{padding:40px 64px 40px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+.tabs{display:flex;gap:22px;flex-wrap:wrap}
+.tabs button{background:none;border:0;padding:6px 0;font-size:var(--step-body);cursor:pointer;color:var(--muted);transition:color .15s ease}
+.tabs button[aria-pressed=true]{color:var(--ink);font-weight:500;box-shadow:inset 0 -2px 0 var(--accent)}
+.show h2{font-weight:400;font-size:var(--step-head);letter-spacing:-.03em}
+.show .desc{margin-top:20px;max-width:34ch}
+.show .price{font:300 var(--step-head)/1 var(--font);letter-spacing:-.03em;margin-top:28px;font-variant-numeric:tabular-nums}
+.show .price small{display:block;font-size:var(--step-small);letter-spacing:0;color:var(--muted);margin-top:8px}
+.extras{margin-top:20px;display:flex;flex-direction:column;gap:8px}
+.extras label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.extras input{width:20px;height:20px;accent-color:var(--accent)}
+.with{font-size:var(--step-small);color:var(--muted)}
+.with a{color:var(--ink)}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.acts button{min-height:72px;border:0;font-weight:500;cursor:pointer;transition:transform .12s var(--ease-out),background-color .15s ease}
+.acts button:active{transform:scale(.98)}
+.acts .a1{background:var(--ink);color:var(--bg)}
+.acts .a2{background:var(--bg)}
+.acts .a2[aria-pressed=true]{background:#d6e3c5}
+
+/* pricing menu */
+.menu{display:grid;grid-template-columns:repeat(12,1fr);gap:0 24px;padding:180px 40px 170px}
+.menu .lh{grid-column:1/4}
+.menu .lh img{margin-top:32px;width:100%;aspect-ratio:4/5;object-fit:cover}
+.menu .lh .cap{font-size:var(--step-small);color:var(--muted);margin-top:8px}
+.menu .cols{grid-column:5/13;display:grid;grid-template-columns:1fr 1fr;gap:0 64px}
+.menu h3{font:500 var(--step-lead)/1.2 var(--font);margin:48px 0 18px}
+.menu .cols>div>h3:first-child{margin-top:0}
+.mi{margin-bottom:22px}
+.mi .row{display:flex;justify-content:space-between;gap:16px;font-size:var(--step-body);font-variant-numeric:tabular-nums}
+.mi p{font-size:var(--step-small);color:var(--muted);max-width:36ch;margin-top:2px}
+
+/* about letter */
+.letter{background:var(--field);color:var(--field-ink);padding:170px 24px}
+.letter .in{max-width:540px;margin:0 auto}
+.letter p{margin-bottom:1.55em;font-size:var(--step-body)}
+.letter mark{background:#5f7d3f;color:#fff;padding:0 4px}
+.letter .sign{font:italic 300 var(--step-lead)/1.2 var(--font);margin:0}
+.letter .role{font-size:var(--step-small);color:#c6ccbf}
+
+/* faq */
+.faq{display:grid;grid-template-columns:repeat(12,1fr);gap:0 24px;padding:0 40px 160px;position:relative}
+.faq .l{grid-column:1/6;padding-top:160px}
+.facts{margin:24px 0 36px;display:flex;flex-direction:column;gap:6px;font-size:var(--step-body)}
+.faq details{padding:14px 0}
+.faq summary{list-style:none;cursor:pointer;font-size:var(--step-lead);display:flex;justify-content:space-between;gap:18px;min-height:44px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary i{flex-shrink:0;width:10px;height:10px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s var(--ease-out)}
+.faq details[open] summary i{transform:rotate(225deg)}
+.faq details p{font-size:var(--step-body);color:var(--ink);margin-top:8px;max-width:42ch}
+.link{font-weight:500;text-decoration:underline;text-underline-offset:.2em}
+.link:hover{color:var(--accent)}
+.faq .cta{margin-top:32px;display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.faq .r{grid-column:7/13;position:relative}
+.faq .r .tall{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;margin-top:-60px}
+.faq .r .sq{position:absolute;left:-40px;bottom:-40px;width:34%;aspect-ratio:1;object-fit:cover}
+
+/* footer */
+footer{position:relative;height:100svh;min-height:620px;overflow:hidden;color:#f6f6f3}
+footer>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.55)}
+footer .top{position:relative;display:flex;justify-content:space-between;gap:24px;padding:32px 40px;font-size:var(--step-body)}
+footer .top ul{display:flex;flex-direction:column;gap:4px}
+footer .top a{text-decoration:none}
+footer .top a:hover{text-decoration:underline}
+footer .bot{position:absolute;left:40px;right:40px;bottom:40px}
+footer .name{font:300 var(--step-display)/.8 var(--font);letter-spacing:-.06em;margin:0 0 18px;white-space:nowrap}
+footer .legal{font-size:var(--step-small);max-width:none}
+footer details summary{cursor:pointer;font-size:var(--step-small);margin-top:6px}
+footer details p{font-size:var(--step-small);margin-top:6px;max-width:110ch}
+footer details a{color:#f6f6f3}
+
+/* cart drawer */
+.drawer{visibility:hidden;position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);background:var(--bg);z-index:50;box-shadow:-20px 0 60px rgba(20,25,18,.25);transform:translateX(100%);transition:transform .32s var(--ease-out);display:flex;flex-direction:column}
+.drawer.open{transform:none;visibility:visible}
+.scrim{position:fixed;inset:0;background:rgba(20,25,18,.4);z-index:49;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility 0s .25s}
+.scrim.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s ease}
+.drawer header{display:flex;justify-content:space-between;align-items:center;padding:22px 24px}
+.drawer h2{font-size:var(--step-lead);font-weight:500}
+.close{background:var(--surface);border:0;min-width:44px;min-height:44px;cursor:pointer;font-size:22px}
+.lines{flex:1;overflow:auto;padding:0 24px}
+.line{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:14px 0;background:var(--bg)}
+.line + .line{box-shadow:inset 0 0 0 0}
+.line .q{display:flex;align-items:center;gap:6px}
+.line .q button{width:40px;height:40px;border:0;background:var(--surface);cursor:pointer;font-size:var(--step-body)}
+.line .q span{min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
+.line .tot{text-align:right;font-variant-numeric:tabular-nums}
+.line .tier{grid-column:1/3;font-size:var(--step-small);color:var(--accent)}
+.empty{color:var(--muted);padding:20px 0}
+.sum{padding:20px 24px;background:var(--surface)}
+.sum .row{display:flex;justify-content:space-between;font-size:var(--step-lead);font-variant-numeric:tabular-nums}
+.sum p{font-size:var(--step-small);color:var(--muted);margin:6px 0 14px}
+.sum form{display:grid;gap:8px}
+.sum input{min-height:48px;border:0;background:var(--bg);padding:0 14px;font:inherit}
+.sum .btn{width:100%}
+.sum .msg{font-size:var(--step-small);margin-top:8px;min-height:1.4em}
+
+/* entrances */
+[data-rise].pre>*{opacity:0;transform:translateY(24px)}
+[data-rise].in>*{opacity:1;transform:none;transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
+[data-rise].in>*:nth-child(2){transition-delay:.07s}[data-rise].in>*:nth-child(3){transition-delay:.14s}[data-rise].in>*:nth-child(4){transition-delay:.21s}[data-rise].in>*:nth-child(5){transition-delay:.28s}
+
+/* scene: real broom over a real bath photo */
+.sc2{position:absolute;inset:0;overflow:hidden;background:#2a2119}
+.sc2 .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.42) saturate(.85) blur(2px);transform:scale(1.05)}
+.tub-back{position:absolute;left:14%;right:14%;top:70%;height:11%;border-radius:50%;background:#6e4b2c;z-index:1}
+.water{position:absolute;left:5%;right:5%;top:12%;bottom:10%;border-radius:50%;background:#6f8f98;transition:background-color .8s ease}
+.sc2.hot .water{background:#9fb3ad}
+#broom{position:absolute;left:50%;top:0;width:min(46%,360px);z-index:2;transform-origin:50% 0;will-change:transform}
+#broom img{width:100%;display:block;filter:drop-shadow(0 18px 24px rgba(0,0,0,.45))}
+.tub-front{position:absolute;left:14%;right:14%;top:75.5%;bottom:-4%;z-index:3;background:url(assets/03.jpg) 0% 8%/360% auto;clip-path:polygon(0 0,100% 0,92% 100%,8% 100%);filter:brightness(.95) sepia(.35) saturate(1.2)}
+.tub-front .lip{position:absolute;left:0;right:0;top:-40%;height:80%;border-radius:50%;box-shadow:inset 0 -10px 0 #8c6238}
+.hoop{position:absolute;left:0;right:0;height:7%;background:#4a3220}
+.h1{top:22%}.h2{top:66%}
+.steam{position:absolute;left:20%;right:20%;top:30%;bottom:22%;z-index:2;pointer-events:none}
+.steam i{position:absolute;bottom:0;left:calc(var(--i) * 16%);width:34%;aspect-ratio:1;border-radius:50%;background:#f2f0ea;filter:blur(28px);opacity:0;transition:opacity .8s ease}
+.sc2.hot .steam i{opacity:.32;animation:puff 4.5s ease-in-out infinite;animation-delay:calc(var(--i) * -.75s)}
+@keyframes puff{0%{transform:translateY(30%) scale(.8)}100%{transform:translateY(-120%) scale(1.25)}}
+.drops i{position:absolute;top:58%;width:7px;height:10px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#d6e6ec;opacity:0;z-index:2}
+.falls i{position:absolute;width:46px;height:46px;background:url(assets/venik-cut.png) no-repeat;background-size:700% auto;opacity:0;z-index:4}
+
+@media (max-width:900px){
+  .split{display:block}
+  .stage{position:sticky;top:0;height:46svh;padding:10px;z-index:4;background:var(--bg)}
+  .read{padding:0 20px}
+  .nav{display:none}
+  .mnav{display:flex!important}
+  .hero{height:auto;padding:28px 0 20px;display:flex;flex-direction:column}
+  .hero .wm{order:-1}
+  .cat .giant{font-size:24cqw}
+  .hero .say{position:static;font-size:var(--step-body);max-width:none;margin-top:18px}
+  .wm{position:static;font-size:21vw;line-height:.85;margin-top:4px}
+  .demo-note{position:static;margin-top:10px}
+  .story{padding:90px 0 60px}
+  .story .phase{min-height:40svh}
+  .cat{padding:70px 20px 90px;margin:0 -20px;position:relative;z-index:5;background:var(--bg)}
+  .show{display:block}
+  .show .ph{padding:16px}
+  .show .tx{padding:8px 16px 40px}
+  .acts{grid-template-columns:1fr}
+  .acts button{min-height:60px}
+  .menu{display:block;padding:100px 20px}
+  .menu .lh img{width:60%}
+  .menu .cols{display:block;margin-top:24px}
+  .menu h3{margin:40px 0 14px}
+  .letter{padding:110px 24px}
+  .faq{display:flex;flex-direction:column-reverse;padding:0 20px 100px}
+  .faq .l{padding-top:40px}
+  .faq .r .tall{margin-top:0;aspect-ratio:4/5}
+  .faq .r .sq{left:auto;right:-8px;bottom:-30px;width:38%}
+  .faq .cta .btn{width:100%}
+  footer{height:88svh}
+  footer .top{flex-direction:column;padding:24px 20px}
+  footer .bot{left:20px;right:20px;bottom:24px}
+  footer .name{font-size:21vw}
+}
+.mnav{display:none;position:absolute;top:18px;right:18px;z-index:6;gap:6px}
+.mnav a,.mnav button{min-height:44px;display:inline-flex;align-items:center;padding:0 14px;background:var(--bg);color:var(--ink);text-decoration:none;border:0;font-weight:500}
+@media (prefers-reduced-motion:reduce){
+  [data-rise].pre>*{opacity:1;transform:none}
+  .scn img,.sc2.hot .steam i{animation:none}
+  .drawer{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="split" id="top">
+  <aside class="stage" aria-label="Иллюстрация">
+    <div class="stage-in">
+      <figure class="scn on" data-scn="hero" style="margin:0"><img src="assets/vihtoja.jpg" width="1217" height="1400" alt="Банные веники сушатся под навесом"><figcaption class="cap">Веники сушатся в тени, без солнца</figcaption></figure>
+      <div class="scn" data-scn="story"><div class="sc2" id="sc2">
+        <img class="bg" src="assets/banya-oblast-de-kostroma-3.jpg" width="1400" height="933" alt="" loading="lazy">
+        <div class="tub-back"><div class="water" id="water"></div></div>
+        <div class="steam" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i></div>
+        <div id="broom" role="img" aria-label="Берёзовый веник"><img src="assets/venik-cut.png" width="491" height="867" alt=""></div>
+        <div class="drops" aria-hidden="true"><i style="--i:0;left:38%"></i><i style="--i:1;left:41%"></i><i style="--i:2;left:44%"></i><i style="--i:3;left:47%"></i><i style="--i:4;left:50%"></i><i style="--i:5;left:53%"></i><i style="--i:6;left:56%"></i><i style="--i:7;left:59%"></i></div>
+        <div class="falls" aria-hidden="true"><i style="--i:0;left:36%;top:40%;background-position:47% 77%"></i><i style="--i:1;left:40%;top:46%;background-position:60% 80%"></i><i style="--i:2;left:44%;top:52%;background-position:82% 31%"></i><i style="--i:3;left:48%;top:40%;background-position:74% 79%"></i><i style="--i:4;left:52%;top:46%;background-position:46% 71%"></i><i style="--i:5;left:56%;top:52%;background-position:21% 40%"></i><i style="--i:6;left:60%;top:40%;background-position:29% 53%"></i><i style="--i:7;left:64%;top:46%;background-position:75% 85%"></i><i style="--i:8;left:68%;top:52%;background-position:46% 54%"></i></div>
+        <div class="tub-front"><span class="lip"></span><span class="hoop h1"></span><span class="hoop h2"></span></div>
+      </div><p class="stepname" id="stepname"><b>Шаг 1</b>Прохладная вода</p></div>
+      <figure class="scn" data-scn="cat" style="margin:0"><img src="assets/venik.jpg" width="1400" height="1050" alt="Берёзовые веники на бревенчатой стене" loading="lazy"><figcaption class="cap">Берёзовые веники</figcaption></figure>
+    </div>
+    <div class="mnav"><a href="#catalog">Каталог</a><button type="button" class="cartbtn" data-open-cart>Корзина <b class="cnt">0</b></button></div>
+  </aside>
+
+  <div class="read">
+    <nav class="nav" aria-label="Меню">
+      <a href="#catalog">Каталог</a><a href="#steam">Как запарить</a><a href="#prices">Опт и акции</a><a href="#faq">Доставка</a>
+      <button type="button" class="cartbtn" data-open-cart>Корзина <b class="cnt">0</b></button>
+    </nav>
+
+    <section class="hero" data-scn-for="hero">
+      <p class="say">Банные веники, травы и запарки. Заготавливаем раз в год, после Троицы, и сушим в тени.<br><a class="btn" href="#catalog">Выбрать веник</a></p>
+      <h1 class="wm" id="wm" aria-label="Веничная">веничная</h1>
+      <p class="demo-note">Демо-версия магазина: название, цены и тексты — образец</p>
+    </section>
+
+    <section class="story" id="steam" data-scn-for="story" aria-labelledby="steam-h">
+      <div data-rise>
+        <h2 id="steam-h">Как запарить веник</h2>
+        <p>Прокрутите вниз: слева веник проходит весь путь, от холодной воды до парилки.</p>
+      </div>
+      <div class="slip" data-rise>
+        <h3>Перед баней</h3>
+        <div class="r"><span>Ополоснуть в прохладной воде</span><i></i><span>5 мин</span></div>
+        <div class="r"><span>Залить горячей водой, накрыть</span><i></i><span>10–15 мин</span></div>
+        <h3>В парилке</h3>
+        <div class="r"><span>Подержать над камнями</span><i></i><span>1 мин</span></div>
+        <div class="r"><span>Встряхнуть и начать париться</span><i></i><span>сразу</span></div>
+        <h3>После</h3>
+        <div class="r"><span>Высушить в тени</span><i></i><span>1–2 дня</span></div>
+        <div class="fin"><span>Веник готов</span><span>≈ 20 минут</span></div>
+      </div>
+      <div class="phase" data-step="1"><h3>Прохладная вода</h3><p>Сначала веник опускают в прохладную воду: лист набирает влагу и не облетит от жара.</p></div>
+      <div class="phase" data-step="2"><h3>Горячая вода</h3><p>Затем заливают горячей водой и накрывают. Дубовому и можжевеловому нужно дольше, берёзовому — меньше.</p></div>
+      <div class="phase" data-step="3"><h3>Над камнями</h3><p>В парилке веник держат над камнями и встряхивают: лист раскрывается и начинает пахнуть.</p></div>
+      <div class="phase" data-step="4"><h3>Пар</h3><p>Веник готов. Воду из шайки можно плеснуть на камни: пар будет пахнуть берёзой.</p></div>
+    </section>
+
+    <section class="cat" id="catalog" data-scn-for="cat" aria-labelledby="cat-h">
+      <h2 class="giant" id="cat-h">веники</h2>
+      <div class="search"><input type="search" id="q" placeholder="Найти: дуб, мята, шапка…" aria-label="Поиск по каталогу"></div>
+      <div class="filters" role="group" aria-label="Наличие">
+        <button type="button" data-f="all" aria-pressed="true">Все</button>
+        <button type="button" data-f="in" aria-pressed="false">В наличии</button>
+        <button type="button" data-f="order" aria-pressed="false">Под заказ</button>
+      </div>
+      <details class="bar" open><summary><span>Берёзовые веники</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="берёзовый классический плоский, мягкий, держит лист 2–3 бани берёзовые веники">
+  <div class="nm"><b>Берёзовый классический</b><span>Плоский, мягкий, держит лист 2–3 бани</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>350 ₽</b><button class="add" type="button" data-id="berez0" aria-label="В корзину: Берёзовый классический">В корзину</button></div>
+</li><li class="it" data-st="order" data-q="берёзовый с пижмой пижма даёт горьковатый полевой запах берёзовые веники">
+  <div class="nm"><b>Берёзовый с пижмой</b><span>Пижма даёт горьковатый полевой запах</span><em class="st st-order">Под заказ</em></div>
+  <div class="pr"><b>420 ₽</b><button class="add" type="button" data-id="berez1" aria-label="В корзину: Берёзовый с пижмой">В корзину</button></div>
+</li><li class="it" data-st="in" data-q="берёзовый «мягкий» повислая берёза, тонкие ветви без жёстких прутьев берёзовые веники">
+  <div class="nm"><b>Берёзовый «Мягкий»</b><span>Повислая берёза, тонкие ветви без жёстких прутьев</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>480 ₽</b><button class="add" type="button" data-id="berez2" aria-label="В корзину: Берёзовый «Мягкий»">В корзину</button></div>
+</li></ul></details>
+<details class="bar"><summary><span>Дубовые веники</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="дубовый плотный лист, хорошо нагнетает жар дубовые веники">
+  <div class="nm"><b>Дубовый</b><span>Плотный лист, хорошо нагнетает жар</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>450 ₽</b><button class="add" type="button" data-id="dub0" aria-label="В корзину: Дубовый">В корзину</button></div>
+</li><li class="it" data-st="order" data-q="дуб и берёза плотность дуба и мягкость берёзы дубовые веники">
+  <div class="nm"><b>Дуб и берёза</b><span>Плотность дуба и мягкость берёзы</span><em class="st st-order">Под заказ</em></div>
+  <div class="pr"><b>520 ₽</b><button class="add" type="button" data-id="dub1" aria-label="В корзину: Дуб и берёза">В корзину</button></div>
+</li><li class="it" data-st="out" data-q="дубовый канадский крупный лист, тяжёлый веник для сильного пара дубовые веники">
+  <div class="nm"><b>Дубовый канадский</b><span>Крупный лист, тяжёлый веник для сильного пара</span><em class="st st-out">Нет в наличии</em></div>
+  <div class="pr"><b>590 ₽</b><span class="add off">Сообщить о поступлении</span></div>
+</li></ul></details>
+<details class="bar"><summary><span>Эвкалиптовые веники</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="эвкалипт прутовидный свежий хвойно-мятный запах, для ингаляции эвкалиптовые веники">
+  <div class="nm"><b>Эвкалипт прутовидный</b><span>Свежий хвойно-мятный запах, для ингаляции</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><s>790 ₽</s> <b>690 ₽</b><button class="add" type="button" data-id="evk0" aria-label="В корзину: Эвкалипт прутовидный">В корзину</button></div>
+</li><li class="it" data-st="order" data-q="эвкалипт и дуб аромат эвкалипта и упругость дуба эвкалиптовые веники">
+  <div class="nm"><b>Эвкалипт и дуб</b><span>Аромат эвкалипта и упругость дуба</span><em class="st st-order">Под заказ</em></div>
+  <div class="pr"><b>750 ₽</b><button class="add" type="button" data-id="evk1" aria-label="В корзину: Эвкалипт и дуб">В корзину</button></div>
+</li></ul></details>
+<details class="bar"><summary><span>Можжевеловые веники</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="можжевеловый колючий, бодрит; запаривать дольше обычного можжевеловые веники">
+  <div class="nm"><b>Можжевеловый</b><span>Колючий, бодрит; запаривать дольше обычного</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>650 ₽</b><button class="add" type="button" data-id="mozh0" aria-label="В корзину: Можжевеловый">В корзину</button></div>
+</li><li class="it" data-st="order" data-q="можжевельник и берёза берёза снаружи, можжевельник внутри можжевеловые веники">
+  <div class="nm"><b>Можжевельник и берёза</b><span>Берёза снаружи, можжевельник внутри</span><em class="st st-order">Под заказ</em></div>
+  <div class="pr"><b>580 ₽</b><button class="add" type="button" data-id="mozh1" aria-label="В корзину: Можжевельник и берёза">В корзину</button></div>
+</li></ul></details>
+<details class="bar"><summary><span>Липовые веники</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="липовый мягкий, медовый запах, для спокойного пара липовые веники">
+  <div class="nm"><b>Липовый</b><span>Мягкий, медовый запах, для спокойного пара</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>400 ₽</b><button class="add" type="button" data-id="lipa0" aria-label="В корзину: Липовый">В корзину</button></div>
+</li><li class="it" data-st="out" data-q="липа и мята мята добавляет прохлады липовые веники">
+  <div class="nm"><b>Липа и мята</b><span>Мята добавляет прохлады</span><em class="st st-out">Нет в наличии</em></div>
+  <div class="pr"><b>460 ₽</b><span class="add off">Сообщить о поступлении</span></div>
+</li></ul></details>
+<details class="bar"><summary><span>Травы и сборы</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="мята перечная, 50 г для пара и чая травы и сборы">
+  <div class="nm"><b>Мята перечная, 50 г</b><span>Для пара и чая</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>190 ₽</b><button class="add" type="button" data-id="travy0" aria-label="В корзину: Мята перечная, 50 г">В корзину</button></div>
+</li><li class="it" data-st="in" data-q="чабрец, 50 г тёплый пряный запах травы и сборы">
+  <div class="nm"><b>Чабрец, 50 г</b><span>Тёплый пряный запах</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>260 ₽</b><button class="add" type="button" data-id="travy1" aria-label="В корзину: Чабрец, 50 г">В корзину</button></div>
+</li><li class="it" data-st="in" data-q="банный сбор «лесной», 100 г хвоя, мята, душица, зверобой травы и сборы">
+  <div class="nm"><b>Банный сбор «Лесной», 100 г</b><span>Хвоя, мята, душица, зверобой</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>340 ₽</b><button class="add" type="button" data-id="travy2" aria-label="В корзину: Банный сбор «Лесной», 100 г">В корзину</button></div>
+</li></ul></details>
+<details class="bar"><summary><span>Чай</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="иван-чай ферментированный, 100 г мягкий, с медовой ноткой чай">
+  <div class="nm"><b>Иван-чай ферментированный, 100 г</b><span>Мягкий, с медовой ноткой</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>390 ₽</b><button class="add" type="button" data-id="chai0" aria-label="В корзину: Иван-чай ферментированный, 100 г">В корзину</button></div>
+</li><li class="it" data-st="order" data-q="таёжный сбор, 100 г чабрец, смородиновый лист, шиповник чай">
+  <div class="nm"><b>Таёжный сбор, 100 г</b><span>Чабрец, смородиновый лист, шиповник</span><em class="st st-order">Под заказ</em></div>
+  <div class="pr"><b>320 ₽</b><button class="add" type="button" data-id="chai1" aria-label="В корзину: Таёжный сбор, 100 г">В корзину</button></div>
+</li></ul></details>
+<details class="bar"><summary><span>Запарки</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="запарка «хвойная» саше на один заход запарки">
+  <div class="nm"><b>Запарка «Хвойная»</b><span>Саше на один заход</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>180 ₽</b><button class="add" type="button" data-id="zap0" aria-label="В корзину: Запарка «Хвойная»">В корзину</button></div>
+</li><li class="it" data-st="in" data-q="запарка «липа и ромашка» для мягкого пара запарки">
+  <div class="nm"><b>Запарка «Липа и ромашка»</b><span>Для мягкого пара</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>180 ₽</b><button class="add" type="button" data-id="zap1" aria-label="В корзину: Запарка «Липа и ромашка»">В корзину</button></div>
+</li><li class="it" data-st="in" data-q="запарка «эвкалипт» для дыхания запарки">
+  <div class="nm"><b>Запарка «Эвкалипт»</b><span>Для дыхания</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>210 ₽</b><button class="add" type="button" data-id="zap2" aria-label="В корзину: Запарка «Эвкалипт»">В корзину</button></div>
+</li></ul></details>
+<details class="bar"><summary><span>Подушки</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="подушка с можжевеловой стружкой лён, 30 × 40 см подушки">
+  <div class="nm"><b>Подушка с можжевеловой стружкой</b><span>Лён, 30 × 40 см</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>890 ₽</b><button class="add" type="button" data-id="pod0" aria-label="В корзину: Подушка с можжевеловой стружкой">В корзину</button></div>
+</li><li class="it" data-st="order" data-q="подушка с травами мята, чабрец, хмель; лён 30 × 40 см подушки">
+  <div class="nm"><b>Подушка с травами</b><span>Мята, чабрец, хмель; лён 30 × 40 см</span><em class="st st-order">Под заказ</em></div>
+  <div class="pr"><b>790 ₽</b><button class="add" type="button" data-id="pod1" aria-label="В корзину: Подушка с травами">В корзину</button></div>
+</li></ul></details>
+<details class="bar"><summary><span>Аксессуары</span><i aria-hidden="true"></i></summary><ul><li class="it" data-st="in" data-q="шапка банная, войлок защищает голову от жара аксессуары">
+  <div class="nm"><b>Шапка банная, войлок</b><span>Защищает голову от жара</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>650 ₽</b><button class="add" type="button" data-id="aks0" aria-label="В корзину: Шапка банная, войлок">В корзину</button></div>
+</li><li class="it" data-st="in" data-q="рукавица для парения войлок, на любую руку аксессуары">
+  <div class="nm"><b>Рукавица для парения</b><span>Войлок, на любую руку</span><em class="st st-in">В наличии</em></div>
+  <div class="pr"><b>390 ₽</b><button class="add" type="button" data-id="aks1" aria-label="В корзину: Рукавица для парения">В корзину</button></div>
+</li><li class="it" data-st="out" data-q="ковш деревянный ручка не нагревается аксессуары">
+  <div class="nm"><b>Ковш деревянный</b><span>Ручка не нагревается</span><em class="st st-out">Нет в наличии</em></div>
+  <div class="pr"><b>900 ₽</b><span class="add off">Сообщить о поступлении</span></div>
+</li><li class="it" data-st="order" data-q="шайка липовая, 5 л для запаривания веника аксессуары">
+  <div class="nm"><b>Шайка липовая, 5 л</b><span>Для запаривания веника</span><em class="st st-order">Под заказ</em></div>
+  <div class="pr"><b>2 400 ₽</b><button class="add" type="button" data-id="aks3" aria-label="В корзину: Шайка липовая, 5 л">В корзину</button></div>
+</li></ul></details>
+      <p class="nores" id="nores">Ничего не нашлось. Напишите нам: соберём веник под заказ.</p>
+      <p class="note">В демо показано 26 позиций из 150. В готовом магазине каталог, цены и наличие меняются в админке.</p>
+    </section>
+  </div>
+</div>
+
+<main>
+<!-- PRODUCT -->
+<section class="show" id="product" aria-labelledby="pr-h">
+  <div class="ph"><img src="assets/commons-37973096.jpg" width="1400" height="1147" alt="Эвкалиптовый банный веник на деревянной стене" loading="lazy"></div>
+  <div class="tx">
+    <div class="tabs" role="group" aria-label="Количество">
+      <button type="button" data-q="1" aria-pressed="true">1 шт</button>
+      <button type="button" data-q="10" aria-pressed="false">10 шт, опт</button>
+      <button type="button" data-q="50" aria-pressed="false">50 шт, опт</button>
+    </div>
+    <div>
+      <h2 id="pr-h">Эвкалипт прутовидный</h2>
+      <p class="desc">Длинные гибкие ветви с узким листом. Свежий хвойно-мятный запах, хорош для ингаляции: веник можно повесить у полка или запарить и вдыхать пар. Длина около 60 см, вес 250–300 г.</p>
+      <p class="price" id="pp">690 ₽<small id="pps">цена за 1 шт · акция, было 790 ₽</small></p>
+      <div class="extras">
+        <label><input type="checkbox" value="150" data-n="Подарочная упаковка"> Подарочная упаковка, +150 ₽</label>
+        <label><input type="checkbox" value="90" data-n="Запарка-саше «Эвкалипт»"> Запарка-саше к венику, +90 ₽</label>
+      </div>
+    </div>
+    <p class="with">С этим покупают: <a href="#catalog">шапку банную</a>, <a href="#catalog">запарку «Хвойная»</a>, <a href="#catalog">шайку липовую</a>.</p>
+    <div class="acts"><button type="button" class="a1" id="pbuy">В корзину</button><button type="button" class="a2" id="pfav" aria-pressed="false">В избранное</button></div>
+  </div>
+</section>
+
+<!-- PRICES -->
+<section class="menu" id="prices" aria-labelledby="pm-h">
+  <div class="lh" data-rise>
+    <h2 id="pm-h">Опт и акции</h2>
+    <img src="assets/commons-4786144.jpg" width="1400" height="1007" alt="Продажа банных веников на улице" loading="lazy">
+    <p class="cap">Продажа веников, Йошкар-Ола, 2006. Архивное фото</p>
+  </div>
+  <div class="cols">
+    <div data-rise>
+      <h3>Опт, ₽ за штуку</h3>
+      <div class="mi"><div class="row"><span>Берёзовый, от 10 шт</span><span>300</span></div><p>Скидка 15% считается в корзине автоматически</p></div>
+      <div class="mi"><div class="row"><span>Берёзовый, от 50 шт</span><span>260</span></div><p>Скидка 25%, для бань и банных комплексов</p></div>
+      <div class="mi"><div class="row"><span>Дубовый, от 10 шт</span><span>380</span></div><p>Можно собрать ассорти из разных видов</p></div>
+      <div class="mi"><div class="row"><span>Эвкалипт, от 10 шт</span><span>590</span></div><p>Везём из Краснодарского края, под заказ 5–7 дней</p></div>
+      <h3>Доставка</h3>
+      <div class="mi"><div class="row"><span>Самовывоз</span><span>0</span></div><p>Адрес пришлём после заказа</p></div>
+      <div class="mi"><div class="row"><span>СДЭК и Почта России</span><span>от 350</span></div><p>Точная цена при оформлении заказа</p></div>
+    </div>
+    <div data-rise>
+      <h3>Акции, ₽</h3>
+      <div class="mi"><div class="row"><span>Эвкалипт прутовидный</span><span>690</span></div><p>Вместо 790 ₽, до конца месяца</p></div>
+      <div class="mi"><div class="row"><span>3 запарки по цене 2</span><span>360</span></div><p>Любые запарки, скидка на третью</p></div>
+      <div class="mi"><div class="row"><span>Набор «Первый пар»</span><span>1 490</span></div><p>Берёзовый веник, шапка, запарка «Хвойная»</p></div>
+      <h3>Услуги к товару, ₽</h3>
+      <div class="mi"><div class="row"><span>Подарочная упаковка</span><span>150</span></div><p>Крафт, лента и открытка с инструкцией</p></div>
+      <div class="mi"><div class="row"><span>Веник на заказ</span><span>от 500</span></div><p>Соберём из нужных пород и трав</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="letter" aria-label="О нас">
+  <div class="in" data-rise>
+    <p>Здравствуйте! Мы заготавливаем веники сами, раз в год. Берёзу режем после Троицы, когда лист уже окреп, но ещё мягкий. Дуб — чуть позже, в июле.</p>
+    <p>Ветки вяжем в тот же день, пока не завяли, и сушим под навесом, в тени. От солнца лист желтеет и теряет запах, поэтому <mark>веник у нас никогда не сушится на солнце</mark>.</p>
+    <p>Эвкалипт привозим с юга, травы собираем и сушим сами. Каждый веник перед отправкой проверяем руками: лист должен держаться, ветки не должны быть пересушены.</p>
+    <p>Если не знаете, какой веник выбрать, напишите нам. Подскажем по вашей бане и по тому, какой пар вы любите.</p>
+    <p class="sign">[Имя мастера]</p>
+    <p class="role">Текст-образец: заменим вашей историей</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq" aria-labelledby="faq-h">
+  <div class="l">
+    <h2 id="faq-h">Доставка и вопросы</h2>
+    <div class="facts"><span>Отправка: 1–2 дня после заказа</span><span>«Под заказ»: соберём из новой партии за 3–7 дней</span><span>Опт: от 10 штук, скидка в корзине</span></div>
+    <details open><summary>Сколько служит веник?<i></i></summary><p>Берёзовый — 2–3 бани, дубовый — 3–4, если после бани сушить его в тени. Эвкалиптовый лучше использовать один-два раза.</p></details>
+    <details><summary>Как хранить веники?<i></i></summary><p>В сухом прохладном месте, в бумаге или крафте. Можно заморозить: замороженный веник почти не теряет лист.</p></details>
+    <details><summary>Что значит «Под заказ»?<i></i></summary><p>Такого веника сейчас нет на складе. Соберём его из новой партии или привезём за 3–7 дней и сообщим, когда отправим.</p></details>
+    <details><summary>Работаете ли вы с банями?<i></i></summary><p>Да. От 50 штук цена ниже на 25%, можно собрать ассорти. Напишите нам, и мы пришлём прайс.</p></details>
+    <details><summary>Как упакован веник?<i></i></summary><p>В крафт-бумагу, плотно, чтобы лист не мялся. С каждым веником кладём памятку, как его запарить.</p></details>
+    <div class="cta"><a class="btn" href="#catalog">Перейти в каталог</a><a class="link" href="#steam">Как запарить веник</a></div>
+  </div>
+  <div class="r">
+    <img class="tall" src="assets/banya-oblast-de-kostroma-3.jpg" width="1400" height="933" alt="Деревянная баня изнутри: полок и шайка" loading="lazy">
+    <img class="sq" src="assets/sauna-bucket-and-vihta-20180814.jpg" width="1400" height="1051" alt="Банная шайка и берёзовый веник" loading="lazy">
+  </div>
+</section>
+</main>
+
+<footer>
+  <img src="assets/birch-leaves-in-contre-jour-at-mysrtigen.jpg" width="1400" height="933" alt="" loading="lazy">
+  <div class="top">
+    <ul><li><a href="#catalog">Каталог</a></li><li><a href="#steam">Как запарить</a></li><li><a href="#prices">Опт и акции</a></li><li><a href="#faq">Доставка</a></li></ul>
+    <ul><li>Telegram: @veninaya_demo</li><li>+7 900 000-00-00</li><li>Пн–Сб, 9:00–20:00</li></ul>
+  </div>
+  <div class="bot">
+    <p class="name" id="fname">веничная</p>
+    <p class="legal">Демо-версия интернет-магазина. Название, цены, контакты и тексты — образец для согласования.</p>
+    <details><summary>Источники фотографий</summary><p>Фотографии из открытых архивов показывают веники и бани вообще, а не товары магазина; в готовом сайте заменяются вашими снимками: <a href="https://commons.wikimedia.org/wiki/File:Venik.JPG">&quot;Venik&quot; by François DEERGUES, CC BY-SA 3.0, via Wikimedia Commons</a>; <a href="https://commons.wikimedia.org/wiki/File:%D0%9F%D1%80%D0%BE%D0%B4%D0%B0%D0%B6%D0%B0_%D0%B1%D0%B0%D0%BD%D0%BD%D1%8B%D1%85_%D0%B2%D0%B5%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2_%D0%B2_%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%B5_%D0%99%D0%BE%D1%88%D0%BA%D0%B0%D1%80-%D0%9E%D0%BB%D0%B0.JPG">&quot;Продажа банных веников в городе Йошкар-Ола&quot; by ru:Участник:Yuriy75, public domain, via Wikimedia Commons</a>; <a href="https://commons.wikimedia.org/wiki/File:Vihtoja.jpg">&quot;Vihtoja&quot; by kallerna, CC BY-SA 3.0, via Wikimedia Commons</a>; <a href="https://commons.wikimedia.org/wiki/File:Sauna_bucket_and_vihta_20180814.jpg">&quot;Sauna bucket and vihta 20180814&quot; by Santeri Viinamäki, CC BY-SA 4.0, via Wikimedia Commons</a>; <a href="https://commons.wikimedia.org/wiki/File:%D0%AD%D0%B2%D0%BA%D0%B0%D0%BB%D0%B8%D0%BF%D1%82%D0%BE%D0%B2%D1%8B%D0%B9_%D0%B1%D0%B0%D0%BD%D0%BD%D1%8B%D0%B9_%D0%B2%D0%B5%D0%BD%D0%B8%D0%BA..JPG">&quot;Эвкалиптовый банный веник.&quot; by GvozdevN, CC BY-SA 4.0, via Wikimedia Commons</a>; <a href="https://commons.wikimedia.org/wiki/File:In_de_sauna._Slaan_met_berkentakken,_Bestanddeelnr_920-4683.jpg">&quot;In de sauna. Slaan met berkentakken, Bestanddeelnr 920-4683&quot; by Eric Koch for Anefo, CC0, via Wikimedia Commons</a>; <a href="https://commons.wikimedia.org/wiki/File:Making_sauna_birch_whisks_1960_(JOKAMT2Ku01-4).tif">&quot;Making sauna birch whisks&quot; by Erkki Voutilainen, CC BY 4.0, via Wikimedia Commons</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=164549577">&quot;Birch leaves in contre-jour at Mysrtigen trail, Brastad 1&quot; by W.carter, CC BY 4.0, via Wikimedia Commons</a>; <a href="https://commons.wikimedia.org/wiki/File:%D0%9A%D0%BE%D0%B1%D0%BE%D0%BD%D0%B0._%D0%A1%D1%82%D0%B0%D1%80%D0%B0%D1%8F_%D0%B1%D0%B0%D0%BD%D1%8F_03.jpg">&quot;Кобона. Старая баня 03&quot; by Екатерина Борисова, CC BY-SA 4.0, via Wikimedia Commons</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=69930202">&quot;Banya-Oblast de Kostroma (3)&quot; by Ji-Elle, CC BY-SA 4.0, via Wikimedia Commons</a>; <a href="https://www.flickr.com/photos/29756225@N00/416757681">&quot;Itsetehty vihta&quot; by Uninen, CC BY-SA 2.0, via Flickr</a></p></details>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Корзина" aria-hidden="true">
+  <header><h2>Корзина</h2><button type="button" class="close" id="close" aria-label="Закрыть корзину">×</button></header>
+  <div class="lines" id="lines"><p class="empty">Пока пусто. Добавьте веник из каталога.</p></div>
+  <div class="sum">
+    <div class="row"><span>Итого</span><b id="total">0 ₽</b></div>
+    <p>От 10 штук одного веника цена снижается на 15%, от 50 — на 25%. На сайте итог пересчитывается на сервере.</p>
+    <form id="order">
+      <input name="name" placeholder="Имя" aria-label="Имя" autocomplete="name" required>
+      <input name="phone" placeholder="Телефон или Telegram" aria-label="Телефон или Telegram" required>
+      <button class="btn" type="submit">Оформить заказ</button>
+      <p class="msg" id="omsg" role="status"></p>
+    </form>
+  </div>
+</aside>
+
+<script>
+const ITEMS=[{"id": "berez0", "name": "Берёзовый классический", "price": 350, "st": "in", "cat": "Берёзовые веники"}, {"id": "berez1", "name": "Берёзовый с пижмой", "price": 420, "st": "order", "cat": "Берёзовые веники"}, {"id": "berez2", "name": "Берёзовый «Мягкий»", "price": 480, "st": "in", "cat": "Берёзовые веники"}, {"id": "dub0", "name": "Дубовый", "price": 450, "st": "in", "cat": "Дубовые веники"}, {"id": "dub1", "name": "Дуб и берёза", "price": 520, "st": "order", "cat": "Дубовые веники"}, {"id": "dub2", "name": "Дубовый канадский", "price": 590, "st": "out", "cat": "Дубовые веники"}, {"id": "evk0", "name": "Эвкалипт прутовидный", "price": 690, "st": "in", "cat": "Эвкалиптовые веники"}, {"id": "evk1", "name": "Эвкалипт и дуб", "price": 750, "st": "order", "cat": "Эвкалиптовые веники"}, {"id": "mozh0", "name": "Можжевеловый", "price": 650, "st": "in", "cat": "Можжевеловые веники"}, {"id": "mozh1", "name": "Можжевельник и берёза", "price": 580, "st": "order", "cat": "Можжевеловые веники"}, {"id": "lipa0", "name": "Липовый", "price": 400, "st": "in", "cat": "Липовые веники"}, {"id": "lipa1", "name": "Липа и мята", "price": 460, "st": "out", "cat": "Липовые веники"}, {"id": "travy0", "name": "Мята перечная, 50 г", "price": 190, "st": "in", "cat": "Травы и сборы"}, {"id": "travy1", "name": "Чабрец, 50 г", "price": 260, "st": "in", "cat": "Травы и сборы"}, {"id": "travy2", "name": "Банный сбор «Лесной», 100 г", "price": 340, "st": "in", "cat": "Травы и сборы"}, {"id": "chai0", "name": "Иван-чай ферментированный, 100 г", "price": 390, "st": "in", "cat": "Чай"}, {"id": "chai1", "name": "Таёжный сбор, 100 г", "price": 320, "st": "order", "cat": "Чай"}, {"id": "zap0", "name": "Запарка «Хвойная»", "price": 180, "st": "in", "cat": "Запарки"}, {"id": "zap1", "name": "Запарка «Липа и ромашка»", "price": 180, "st": "in", "cat": "Запарки"}, {"id": "zap2", "name": "Запарка «Эвкалипт»", "price": 210, "st": "in", "cat": "Запарки"}, {"id": "pod0", "name": "Подушка с можжевеловой стружкой", "price": 890, "st": "in", "cat": "Подушки"}, {"id": "pod1", "name": "Подушка с травами", "price": 790, "st": "order", "cat": "Подушки"}, {"id": "aks0", "name": "Шапка банная, войлок", "price": 650, "st": "in", "cat": "Аксессуары"}, {"id": "aks1", "name": "Рукавица для парения", "price": 390, "st": "in", "cat": "Аксессуары"}, {"id": "aks2", "name": "Ковш деревянный", "price": 900, "st": "out", "cat": "Аксессуары"}, {"id": "aks3", "name": "Шайка липовая, 5 л", "price": 2400, "st": "order", "cat": "Аксессуары"}];
+const byId=Object.fromEntries(ITEMS.map(i=>[i.id,i]));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rub=n=>Math.round(n).toLocaleString('ru-RU')+' ₽';
+const tier=q=>q>=50?.75:q>=10?.85:1;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+
+/* ---------- cart ---------- */
+let cart={};try{cart=JSON.parse(localStorage.getItem('venik-cart')||'{}')}catch(e){}
+const extra={};
+function save(){try{localStorage.setItem('venik-cart',JSON.stringify(cart))}catch(e){}}
+function renderCart(){
+  const ids=Object.keys(cart).filter(id=>cart[id]>0&&(byId[id]||extra[id]));
+  let total=0,count=0;
+  $('#lines').innerHTML=ids.length?ids.map(id=>{const it=byId[id]||extra[id],q=cart[id],k=byId[id]?tier(q):1,s=it.price*k*q;total+=s;count+=q;
+    return `<div class="line"><div><b>${it.name}</b><div class="q"><button type="button" data-d="${id}" aria-label="Меньше">−</button><span>${q}</span><button type="button" data-i="${id}" aria-label="Больше">+</button></div></div><div class="tot">${rub(s)}</div>${k<1?`<div class="tier">Оптовая цена: ${rub(it.price*k)} за шт</div>`:''}</div>`}).join(''):'<p class="empty">Пока пусто. Добавьте веник из каталога.</p>';
+  $('#total').textContent=rub(total);
+  $$('.cnt').forEach(c=>c.textContent=count);
+}
+function bump(){$$('.cartbtn').forEach(b=>{b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');setTimeout(()=>b.classList.remove('bump'),300)})}
+function add(id,q=1){cart[id]=(cart[id]||0)+q;save();renderCart();bump()}
+document.addEventListener('click',e=>{
+  const a=e.target.closest('.add[data-id]');if(a){add(a.dataset.id);a.classList.add('ok');a.textContent='Добавлено';setTimeout(()=>{a.classList.remove('ok');a.textContent='В корзину'},1400)}
+  const i=e.target.closest('[data-i]');if(i){cart[i.dataset.i]++;save();renderCart()}
+  const d=e.target.closest('[data-d]');if(d){cart[d.dataset.d]--;if(cart[d.dataset.d]<=0)delete cart[d.dataset.d];save();renderCart()}
+  if(e.target.closest('[data-open-cart]'))openCart(true);
+});
+function openCart(o){$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o);$('#drawer').setAttribute('aria-hidden',!o);if(o)$('#close').focus()}
+$('#close').onclick=()=>openCart(false);$('#scrim').onclick=()=>openCart(false);
+addEventListener('keydown',e=>{if(e.key==='Escape')openCart(false)});
+$('#order').addEventListener('submit',e=>{e.preventDefault();$('#omsg').textContent=Object.keys(cart).length?'Демо: в готовом магазине заказ сохранится, даже если пропадёт интернет, и придёт продавцу в Telegram.':'Добавьте товар в корзину.'});
+renderCart();
+
+/* ---------- product page: wholesale tabs + extras ---------- */
+const P={id:'evk0',price:690,old:790};let pq=1;
+function prod(){const k=tier(pq),ex=$$('.extras input:checked').reduce((s,c)=>s+ +c.value,0);
+  $('#pp').firstChild.nodeValue=rub(P.price*k)+' ';
+  $('#pps').textContent=pq===1?'цена за 1 шт · акция, было 790 ₽':`за шт при заказе от ${pq} · всего ${rub(P.price*k*pq+ex)}`;
+  $('#pbuy').textContent='В корзину — '+rub(P.price*k*pq+ex);}
+$$('.tabs button').forEach(b=>b.onclick=()=>{$$('.tabs button').forEach(x=>x.setAttribute('aria-pressed',x===b));pq=+b.dataset.q;prod()});
+$$('.extras input').forEach(c=>c.onchange=prod);
+$('#pbuy').onclick=()=>{add(P.id,pq);$$('.extras input:checked').forEach(c=>{const id='x'+c.value;extra[id]={name:c.dataset.n,price:+c.value};add(id,1)});openCart(true)};
+$('#pfav').onclick=e=>{const on=e.currentTarget.getAttribute('aria-pressed')!=='true';e.currentTarget.setAttribute('aria-pressed',on);e.currentTarget.textContent=on?'В избранном':'В избранное'};
+prod();
+
+/* ---------- catalog search + filter ---------- */
+let F='all';
+function filt(){const q=$('#q').value.trim().toLowerCase();let any=0;
+  $$('.bar').forEach(b=>{let n=0;b.querySelectorAll('.it').forEach(it=>{const ok=(!q||it.dataset.q.includes(q))&&(F==='all'||it.dataset.st===F);it.hidden=!ok;if(ok)n++});b.hidden=!n;if(q&&n)b.open=true;any+=n});
+  $('#nores').style.display=any?'none':'block';}
+$('#q').addEventListener('input',filt);
+$$('.filters button').forEach(b=>b.onclick=()=>{$$('.filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));F=b.dataset.f;filt()});
+
+/* ---------- stage scenes follow the reading column ---------- */
+const scns=Object.fromEntries($$('.scn').map(s=>[s.dataset.scn,s]));
+const scnFor=$$('[data-scn-for]');let curScn='hero';
+function pickScene(){const c=innerHeight/2;let k=curScn;scnFor.forEach(el=>{const r=el.getBoundingClientRect();if(r.top<=c&&r.bottom>c)k=el.dataset.scnFor});if(k!==curScn){scns[curScn].classList.remove('on');scns[k].classList.add('on');curScn=k}}
+
+/* ---------- the broom story: scroll-linked ---------- */
+const story=$('#steam'),broom=$('#broom'),sc=$('#sc2'),stepEl=$('#stepname');
+const drops=$$('.drops i'),falls=$$('.falls i'),names=['Прохладная вода','Горячая вода','Над камнями','Пар'];
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),seg=(p,a,b)=>clamp((p-a)/(b-a));
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+let lastStep=-1,ticking=false;
+function frame(){
+  ticking=false;pickScene();
+  const r=story.getBoundingClientRect(),vh=innerHeight;
+  const p=clamp((vh*.5-r.top)/(r.height-vh*.3));
+  const s=p<.25?0:p<.5?1:p<.75?2:3;
+  const H=sc.clientHeight,bh=broom.offsetHeight;
+  const up=H*.1, dip=H*.72-bh*.55;
+  let y,rot;
+  if(reduce){y=[up,dip,up,up][s];rot=0}
+  else if(p<.25){const t=ease(seg(p,0,.25));y=up+(dip-up)*t;rot=-5*t}
+  else if(p<.5){y=dip+Math.sin(p*60)*3;rot=-5}
+  else if(p<.75){const t=seg(p,.5,.75);y=dip-(dip-up)*ease(Math.min(1,t*1.6));rot=Math.sin(t*Math.PI*4)*20}
+  else{const t=seg(p,.75,1);y=up;rot=Math.sin(t*Math.PI*3)*8}
+  broom.style.transform=`translate(-50%,${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg)`;
+  sc.classList.toggle('hot',s>=1);
+  const dt=seg(p,.5,.75);
+  drops.forEach((d,k)=>{const show=s===2&&!reduce;d.style.opacity=show?.85:0;d.style.transform=show?`translateY(${((dt*5+k*.13)%1*H*.18).toFixed(0)}px)`:''});
+  const ft=seg(p,.75,1);
+  falls.forEach((f,k)=>{f.style.opacity=s===3?1:0;if(!reduce)f.style.transform=`translate(${(Math.sin(ft*6+k)*40).toFixed(0)}px,${(ft*H*(.35+k*.04)).toFixed(0)}px) rotate(${(ft*300+k*40).toFixed(0)}deg)`});
+  if(s!==lastStep){lastStep=s;stepEl.innerHTML=`<b>Шаг ${s+1}</b>${names[s]}`}
+  const wm=$('#wm'),h=clamp(scrollY/vh);if(!reduce&&wm)wm.style.transform=`scale(${(1-h*.07).toFixed(4)})`;
+  const fn=$('#fname'),fr=fn.getBoundingClientRect(),fp=clamp(1-(fr.top-vh*.4)/(vh*.6));if(!reduce)fn.style.transform=`scale(${(.94+fp*.06).toFixed(4)})`;
+}
+addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(frame)}},{passive:true});
+addEventListener('resize',frame);frame();
+$('#broom img').addEventListener('load',frame);
+
+/* ---------- entrances ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+$$('[data-rise]').forEach(el=>{if(el.getBoundingClientRect().top>innerHeight*.9){el.classList.add('pre');io.observe(el)}});
+setTimeout(()=>$$('[data-rise]').forEach(el=>el.classList.add('in')),6000);
+</script>
+</body>
+</html>
